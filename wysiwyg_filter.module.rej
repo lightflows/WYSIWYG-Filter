@@ -1,0 +1,32 @@
+***************
+*** 73,78 ****
+  }
+  
+  /**
+   * Implementation of hook_input_formats_variables().
+   */
+  function wysiwyg_filter_input_formats_variables($delta) {
+--- 73,95 ----
+  }
+  
+  /**
++  * Implementation of hook_form_FORM_ID_alter().
++  *
++  * Because filter format forms are merged, any common keys need to be added in
++  * a form_alter. Otherwise, e.g. submit handlers added by one module would be
++  * overwritten by those of another module.
++  */
++ function wysiwyg_filter_form_filter_admin_configure_alter(&$form, $form_state) {
++   if (isset($form['wysiwyg_filter'])) {
++     $form['#validate'][] = 'wysiwyg_filter_settings_filter_validate';
++ 
++     // Add the submit callback to the beginning of the array because we need
++     // to prepare data for system_settings_form_submit().
++     array_unshift($form['#submit'], 'wysiwyg_filter_settings_filter_submit');
++   }
++ }
++ 
++ /**
+   * Implementation of hook_input_formats_variables().
+   */
+  function wysiwyg_filter_input_formats_variables($delta) {

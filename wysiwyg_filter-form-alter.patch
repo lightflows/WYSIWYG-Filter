@@ -1,0 +1,62 @@
+Index: wysiwyg_filter.admin.inc
+===================================================================
+RCS file: /cvs/drupal-contrib/contributions/modules/wysiwyg_filter/Attic/wysiwyg_filter.admin.inc,v
+retrieving revision 1.1.2.10
+diff -u -p -r1.1.2.10 wysiwyg_filter.admin.inc
+--- wysiwyg_filter.admin.inc	8 May 2010 07:15:47 -0000	1.1.2.10
++++ wysiwyg_filter.admin.inc	19 Aug 2010 03:24:16 -0000
+@@ -157,23 +157,6 @@ This option allows you to specify which 
+ }
+ 
+ /**
+- * Implementation of hook_form_FORM_ID_alter().
+- *
+- * Because filter format forms are merged, any common keys need to be added in
+- * a form_alter. Otherwise, e.g. submit handlers added by one module would be
+- * overwritten by those of another module.
+- */
+-function wysiwyg_filter_form_filter_admin_configure_alter(&$form, $form_state) {
+-  if (isset($form['wysiwyg_filter'])) {
+-    $form['#validate'][] = 'wysiwyg_filter_settings_filter_validate';
+-
+-    // Add the submit callback to the beginning of the array because we need
+-    // to prepare data for system_settings_form_submit().
+-    array_unshift($form['#submit'], 'wysiwyg_filter_settings_filter_submit');
+-  }
+-}
+-
+-/**
+  * Validate if the given rule definition is complete.
+  *
+  * @param $rule_info
+Index: wysiwyg_filter.module
+===================================================================
+RCS file: /cvs/drupal-contrib/contributions/modules/wysiwyg_filter/Attic/wysiwyg_filter.module,v
+retrieving revision 1.1.2.14
+diff -u -p -r1.1.2.14 wysiwyg_filter.module
+--- wysiwyg_filter.module	10 Aug 2010 02:01:22 -0000	1.1.2.14
++++ wysiwyg_filter.module	19 Aug 2010 03:24:16 -0000
+@@ -73,6 +73,23 @@ function wysiwyg_filter_wysiwyg_editor_s
+ }
+ 
+ /**
++ * Implementation of hook_form_FORM_ID_alter().
++ *
++ * Because filter format forms are merged, any common keys need to be added in
++ * a form_alter. Otherwise, e.g. submit handlers added by one module would be
++ * overwritten by those of another module.
++ */
++function wysiwyg_filter_form_filter_admin_configure_alter(&$form, $form_state) {
++  if (isset($form['wysiwyg_filter'])) {
++    $form['#validate'][] = 'wysiwyg_filter_settings_filter_validate';
++
++    // Add the submit callback to the beginning of the array because we need
++    // to prepare data for system_settings_form_submit().
++    array_unshift($form['#submit'], 'wysiwyg_filter_settings_filter_submit');
++  }
++}
++
++/**
+  * Implementation of hook_input_formats_variables().
+  */
+ function wysiwyg_filter_input_formats_variables($delta) {
